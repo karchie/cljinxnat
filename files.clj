@@ -2,8 +2,8 @@
 (ns #^{:doc "XNAT file paths"
        :author "Kevin A. Archie <karchie@wustl.edu>"}
   xnat.files
-  (:import [java.io File]
-           [org.nrg.xnat.turbine.utils ArcSpecManager])
+  (:import (java.io File)
+           (org.nrg.xnat.turbine.utils ArcSpecManager))
   (:require [clojure.string :as string]))
 
 (defmacro build-path-functions

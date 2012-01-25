@@ -82,10 +82,69 @@ XNAT DICOM support
 
 ***
 
-__get-dicom-scp__
+__get-spring-cstore-scp__
 _function_
 
     Usage: (xnat.dicom/get-dicom-scp)
 
 Returns the DICOM C-STORE SCP object (org.nrg.dcm.DicomSCP) specified
 in the Spring configuration.
+
+***
+
+__make-cstore-scp__
+_function_
+
+    Usage: (make-cstore-scp xdat-user :ae-title "XNAT" :port 8104)
+
+Creates a new DICOM C-STORE SCP object. There are many optional
+arguments allowing considerable flexibility:
+
+^String ae-title:
+application entity title, must be provided unless application-entity
+is set.
+
+^org.dcm4che2.net.NetworkApplicationEntity application-entity:
+If none is provided, a new one will be created using the network
+connection and provided AE title.
+
+^org.dcm4che2.net.Device device:
+If none is provided, a new one will be created using the provided (or
+default) network connection and the application entity.
+
+^java.util.concurrent.ExecutorService executor-service:
+If none is provided, a new cached thread pool will be created.
+
+^org.dcm4che2.net.NetworkConnection network-connection:
+If none is provided, a new one will be created on the provided port.
+
+^int port:
+TCP port for service, must be provided unless either
+network-connection is set, or both application-entity and device are
+set.
+
+^String service-name:
+Name used for thread identification.
+
+^org.nrg.xnat.DicomObjectIdentifier<org.nrg.xdat.om.XnatProjectdata>
+ xnat-identifier:
+If none is provided, a new org.nrg.dcm.id.ClassicDicomObjectIdentifier
+is created.
+
+***
+
+## xnat.prearc
+
+Prearchive operations
+
+***
+
+__get-sessions__
+_function_
+
+    Usage: (xnat.prearc/get-sessions)
+           (xnat.prearc/get-sessions "project")
+
+Gets a sequence of maps, each representing a session in the
+prearchive. If a project argument is provided, the sequence is all
+sessions in that project; otherwise, all sessions for all projects.
