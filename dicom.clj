@@ -2,10 +2,15 @@
 (ns #^{:doc "XNAT DICOM services"
        :author "Kevin A. Archie <karchie@wustl.edu>"}
   xnat.dicom
-  (:import (java.util.concurrent Executors)
+  (:import (java.util Collections
+                      TreeSet)
+           (java.util.concurrent Executors)
            (org.nrg.xdat XDAT)
            (org.nrg.dcm DicomSCP)
-           (org.nrg.dcm.id ClassicDicomObjectIdentifier)
+           (org.nrg.dcm.id ClassicDicomObjectIdentifier
+                           CompositeDicomObjectIdentifier
+                           DicomProjectIdentifier)
+           (org.nrg.xdat.om XnatProjectdata)
            (org.dcm4che2.net Device
                              NetworkApplicationEntity
                              NetworkConnection)
@@ -96,3 +101,20 @@ is created.
                device application-entity
                xnat-identifier)))
 
+
+(defn fixed-project-identifier
+  [project]
+  (proxy [DicomProjectIdentifier] []
+    (getTags [] (TreeSet.))
+
+    (apply [user _]
+      (XnatProjectdata/getXnatProjectdatasById project user false))))
+
+
+(defn fixed-project-object-identifier
+  [project]
+  (proxy [CompositeDicomObjectIdentifier]
+      [(fixed-project-identifier project)
+       (ClassicDicomObjectIdentifier/getSessionExtractors)
+       (ClassicDicomObjectIdentifier/getSubjectExtractors)
+       (ClassicDicomObjectIdentifier/getAAExtractors)]))
