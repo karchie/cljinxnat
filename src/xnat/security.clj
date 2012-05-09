@@ -4,8 +4,8 @@
   xnat.security
   (:import (org.nrg.xdat.security XDATUser)))
 
-(defn get-user [login]
-  (XDATUser. login))
+(defn user [u]
+  (if (instance? XDATUser u) u (XDATUser. u)))
 
 
 
